@@ -1,0 +1,89 @@
+﻿@page "/checkouts"
+
+<div class="container">
+    <div class="form-container">
+        <h2>Checkouts</h2>
+        <div class="form-group">
+            <EditForm Model="checkout" OnValidSubmit="Add">
+                <div class="form-group">
+                    <label>Book Title:</label>
+                    <select required @bind="checkout.ISBN">
+                        <option value="">Select Title</option>
+                        @foreach (var book in books)
+                        {
+                            <option value="@book.ISBN">@book.Title, @book.Author</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Member Name:</label>
+                    <select required @bind="checkout.MemberId">
+                        @foreach (var member in members)
+                        {
+                            <option value="@member.MemberId">@member.LastName, @member.FirstName</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Return By:</label>
+                    <input type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" required @bind="checkout.ReturnDate">
+                </div>
+                <input type="submit" value="Checkout Book">
+            </EditForm>
+        </div>
+    </div>
+
+    <div class="data-display">
+        <h2>Display</h2>
+        <div class="data-item">
+            <span class="data-label">Checkout ID: </span> @currentCheckout.CheckoutId
+        </div>
+        <div class="data-item">
+            <span class="data-label">Title: </span> @currentCheckout.Title
+        </div>
+        <div class="data-item">
+            <span class="data-label">Member: </span> @currentCheckout.Member
+        </div>
+        <div class="data-item">
+            <span class="data-label">Checkout Date: </span> @currentCheckout.CheckOutDate
+        </div>
+        <div class="data-item">
+            <span class="data-label">Return Date: </span> @currentCheckout.ReturnDate
+        </div>
+        <div class="data-item">
+            <select @onchange="Select">
+                <option value="0">Select Checkout</option>
+                @foreach (var checkout in checkouts)
+                {
+                    <option value="@checkout.CheckoutId">@checkout.CheckoutId</option>
+                }
+            </select>
+        </div>
+    </div>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>Checkout ID</th>
+            <th>Title</th>
+            <th>Member</th>
+            <th>Checkout Date</th>
+            <th>Return Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var checkout in checkouts)
+        {
+            <tr>
+                <td>@checkout.CheckoutId</td>
+                <td>@checkout.Title</td>
+                <td>@checkout.Member</td>
+                <td>@checkout.CheckOutDate.ToString("yyyy-MM-dd")</td>
+                <td>@checkout.ReturnDate.ToString("yyyy-MM-dd")</td>
+                <td><button @onclick="() => Remove(checkout)">Returned</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+

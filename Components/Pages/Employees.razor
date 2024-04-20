@@ -1,16 +1,16 @@
-﻿@page "/members"
+﻿@page "/employees"
 
 <div class="container">
     <div class="form-container">
-        <h2>Members</h2>
-        <EditForm Model="member" OnValidSubmit="Add">
+        <h2>Employees</h2>
+        <EditForm Model="employee" OnValidSubmit="Add">
             <div class="form-group">
                 <label>First Name:</label>
-                <input type="text" required @bind="member.FirstName">
+                <input type="text" required @bind="employee.FirstName">
             </div>
             <div class="form-group">
                 <label>Last Name:</label>
-                <input type="text" required @bind="member.LastName">
+                <input type="text" required @bind="employee.LastName">
             </div>
             <div class="form-group">
                 @if (invalidPhone)
@@ -21,7 +21,7 @@
                 {
                     <label>Phone (XXX-XXX-XXXX):</label>
                 }
-                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required @bind="member.Phone">
+                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required @bind="employee.Phone">
             </div>
             <div class="form-group">
                 @if (invalidEmail)
@@ -32,35 +32,35 @@
                 {
                     <label>Email:</label>
                 }
-                <input type="email" required @bind="member.Email">
+                <input type="email" required @bind="employee.Email">
             </div>
-            <input type="submit" value="Add Member">
+            <input type="submit" value="Add Employee">
         </EditForm>
     </div>
 
     <div class="data-display">
         <h2>Display</h2>
         <div class="data-item">
-            <span class="data-label">Member ID: </span> @currentMember.MemberId
+            <span class="data-label">Employee ID: </span> @currentEmployee.EmployeeId
         </div>
         <div class="data-item">
-            <span class="data-label">First Name: </span> @currentMember.FirstName
+            <span class="data-label">First Name: </span> @currentEmployee.FirstName
         </div>
         <div class="data-item">
-            <span class="data-label">Last Name: </span> @currentMember.LastName
+            <span class="data-label">Last Name: </span> @currentEmployee.LastName
         </div>
         <div class="data-item">
-            <span class="data-label">Phone: </span> @currentMember.Phone
+            <span class="data-label">Phone: </span> @currentEmployee.Phone
         </div>
         <div class="data-item">
-            <span class="data-label">Email: </span> @currentMember.Email
+            <span class="data-label">Email: </span> @currentEmployee.Email
         </div>
         <div class="data-item">
             <select @onchange="Select">
-                <option value="0">Select Member</option>
-                @foreach (var member in members)
+                <option value="0">Select Employee</option>
+                @foreach (var employee in employees)
                 {
-                    <option value="@member.MemberId">@member.LastName, @member.FirstName</option>
+                    <option value="@employee.EmployeeId">@employee.LastName, @employee.FirstName</option>
                 }
             </select>
         </div>
@@ -69,7 +69,7 @@
 <table>
     <thead>
         <tr>
-            <th>Member ID</th>
+            <th>Employee ID</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Phone</th>
@@ -78,17 +78,16 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var member in members)
+        @foreach (var employee in employees)
         {
             <tr>
-                <td>@member.MemberId</td>
-                <td>@member.FirstName</td>
-                <td>@member.LastName</td>
-                <td>@member.Phone</td>
-                <td>@member.Email</td>
-                <td><button @onclick="() => Remove(member)">Remove</button></td>
+                <td>@employee.EmployeeId</td>
+                <td>@employee.FirstName</td>
+                <td>@employee.LastName</td>
+                <td>@employee.Phone</td>
+                <td>@employee.Email</td>
+                <td><button @onclick="() => Remove(employee)">Remove</button></td>
             </tr>
         }
     </tbody>
 </table>
-

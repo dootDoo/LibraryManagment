@@ -2,84 +2,103 @@
 
 <div class="container">
     <div class="form-container">
-        <h2>Input Form</h2>
-        <form>
+        <h2>Books</h2>
+        <EditForm Model="book" OnValidSubmit="Add">
+            <div class="form-group">
+                @if (invalidValue)
+                {
+                    <label>ISBN (10 or 13 digit ISBN): ISBN is Already Registered</label>
+                }
+                else
+                {
+                    <label>ISBN (10 or 13 digit ISBN):</label>
+                }
+                <input type="text" pattern="[\d]{10}|[\d]{13}" maxlength="13" required @bind="book.ISBN">
+            </div>
             <div class="form-group">
                 <label>Title:</label>
-                <input type="text" required>
+                <input type="text" required @bind="book.Title">
             </div>
             <div class="form-group">
                 <label>Author:</label>
-                <input type="text" required>
+                <input type="text" required @bind="book.Author">
             </div>
             <div class="form-group">
-                <label>ISBN (10-digit or 13-digit ISBN):</label>
-                <input type="text" pattern="\d{9}[\dXx]" required>
-            </div>
-            <div class="form-group">
-                <label>Genre:</label>
-                <input type="text" id="age" name="age" min="18" required>
+                <label>Category:</label>
+                <select required @bind="book.Category">
+                    @foreach (var category in categories)
+                    {
+                        <option value="@category.CategoryId">@category.Name</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <label>Publisher:</label>
-                <input type="text" id="city" name="city" required>
+                <input type="text" required @bind="book.Publisher">
             </div>
             <div class="form-group">
                 <label>Publication Year:</label>
-                <input type="number" min="0" max="9999" required>
+                <input type="number" min="1" max="9999" required @bind="book.PublicationYear">
             </div>
             <input type="submit" value="Add Book">
-        </form>
+        </EditForm>
     </div>
 
     <div class="data-display">
-        <h2>Data Display</h2>
+        <h2>Display</h2>
         <div class="data-item">
-            <span class="data-label">Title:</span> The Hobbit
+            <span class="data-label">ISBN: </span> @currentBook.ISBN
         </div>
         <div class="data-item">
-            <span class="data-label">Author:</span> JRR. Tolkein
+            <span class="data-label">Title: </span> @currentBook.Title
         </div>
         <div class="data-item">
-            <span class="data-label">ISBN:</span> 123-456-7890
+            <span class="data-label">Author: </span> @currentBook.Author
         </div>
         <div class="data-item">
-            <span class="data-label">Genre:</span> Fantasy
+            <span class="data-label">Category: </span> @currentBook.Category
         </div>
         <div class="data-item">
-            <span class="data-label">Publisher:</span> Houghton Mifflin
+            <span class="data-label">Publisher: </span> @currentBook.Publisher
         </div>
         <div class="data-item">
-            <span class="data-label">Publication Year:</span> 1954
+            <span class="data-label">Publication Year: </span> @currentBook.PublicationYear
+        </div>
+        <div class="data-item">
+            <select @onchange="Select">
+                <option value="0">Select Title</option>
+                @foreach (var book in books)
+                {
+                    <option value="@book.ISBN">@book.Title, @book.Author</option>
+                }
+            </select>
         </div>
     </div>
 </div>
 <table>
     <thead>
         <tr>
+            <th>ISBN</th>
             <th>Title</th>
             <th>Author</th>
-            <th>ISBN</th>
-            <th>Genre</th>
+            <th>Category</th>
             <th>Publisher</th>
             <th>Publication Year</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>John Doe</td>
-            <td>30</td>
-            <td>USA</td>
-        </tr>
-        <tr>
-            <td>Jane Smith</td>
-            <td>25</td>
-            <td>Canada</td>
-        </tr>
-        <tr>
-            <td>Alice Johnson</td>
-            <td>35</td>
-            <td>UK</td>
-        </tr>
+        @foreach (var book in books)
+        {
+            <tr>
+                <td>@book.ISBN</td>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>@book.Category</td>
+                <td>@book.Publisher</td>
+                <td>@book.PublicationYear</td>
+                <td><button @onclick="() => Remove(book)">Remove</button></td>
+            </tr>
+        }
     </tbody>
 </table>

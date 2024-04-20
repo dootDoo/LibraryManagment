@@ -5,7 +5,7 @@ namespace LibraryManagment.Services
 {
     public class DBAcessor
     {
-        protected MySqlConnection connection;
+        public static MySqlConnection connection;
 
         public DBAcessor()
         {
@@ -23,23 +23,6 @@ namespace LibraryManagment.Services
             };
 
             connection = new MySqlConnection(builder.ConnectionString);
-        }
-
-        public void InitializeDatabase()
-        {
-            connection.Open();
-
-            var sql = @"CREATE TABLE IF NOT EXISTS books (
-                BookId VARCHAR(36) PRIMARY KEY,
-                Title VARCHAR(255) NOT NULL,
-                Author VARCHAR(255) NOT NULL,
-                Description TEXT,
-                Category VARCHAR(255)   
-            )";
-
-            connection.Execute(sql);
-
-            connection.Close();
         }
     }
 }
