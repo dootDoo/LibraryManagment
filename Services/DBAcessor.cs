@@ -3,7 +3,7 @@ using MySqlConnector;
 
 namespace LibraryManagment.Services
 {
-    public class DBAcessor
+    public abstract class DBAcessor
     {
         public static MySqlConnection connection;
 
@@ -23,6 +23,21 @@ namespace LibraryManagment.Services
             };
 
             connection = new MySqlConnection(builder.ConnectionString);
+        }
+        protected void OpenConnection()
+        {
+            if (connection.State == System.Data.ConnectionState.Closed)
+            {
+                connection.Open();
+            }
+        }
+
+        protected void CloseConnection()
+        {
+            if (connection.State == System.Data.ConnectionState.Open)
+            {
+                connection.Close();
+            }
         }
     }
 }

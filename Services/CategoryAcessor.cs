@@ -1,37 +1,23 @@
-﻿using LibraryManagment.Models;
-using MySqlConnector;
+﻿using Dapper;
+using LibraryManagment.Models;
 
 namespace LibraryManagment.Services
 {
-    public class CategoryAcessor : DBAcessor
+    public class CategoryAccessor : DBAcessor
     {
-        public CategoryAcessor() : base()
+        public CategoryAccessor() : base()
         {
         }
 
         public List<Category> Get()
         {
-            connection.Open();
+            OpenConnection();
 
-            var sql = @"SELECT * FROM categories";
+            var sql = "SELECT * FROM categories";
 
-            MySqlCommand command = new MySqlCommand(sql, connection);
+            List<Category> categories = connection.Query<Category>(sql).AsList();
 
-            var reader = command.ExecuteReader();
-
-            List<Category> categories = new List<Category>();
-
-            while (reader.Read())
-            {
-                Category obj = new Category
-                {
-                    CategoryId = reader.GetInt32("CategoryId"),
-                    Name = reader.GetString("Name")
-                };
-                categories.Add(obj);
-            }
-
-            connection.Close();
+            CloseConnection();
             return categories;
         }
     }

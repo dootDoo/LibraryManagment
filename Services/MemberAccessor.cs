@@ -12,36 +12,19 @@ namespace LibraryManagment.Services
 
         public List<Member> Get()
         {
-            connection.Open();
+            OpenConnection();
 
-            var sql = @"SELECT * FROM members";
+            var sql = "SELECT * FROM members";
 
-            MySqlCommand command = new MySqlCommand(sql, connection);
+            var members = connection.Query<Member>(sql).AsList();
 
-            var reader = command.ExecuteReader();
-
-            List<Member> members = new List<Member>();
-
-            while (reader.Read())
-            {
-                Member obj = new Member
-                {
-                    MemberId = reader.GetInt32("MemberId"),
-                    FirstName = reader.GetString("FirstName"),
-                    LastName = reader.GetString("LastName"),
-                    Phone = reader.GetString("Phone"),
-                    Email = reader.GetString("Email")
-                };
-                members.Add(obj);
-            }
-
-            connection.Close();
+            CloseConnection();
             return members;
         }
 
         public void Add(Member member)
         {
-            connection.Open();
+            OpenConnection();
 
             var sql = $@"
     INSERT INTO members(MemberId, FirstName, LastName, Phone, Email)
@@ -50,13 +33,13 @@ namespace LibraryManagment.Services
 
             connection.Execute(sql);
 
-            connection.Close();
+            CloseConnection();
         }
 
         //Remove book in DB
         public void Remove(Member member)
         {
-            connection.Open();
+            OpenConnection();
 
             var sql = $@"
     DELETE FROM members
@@ -64,7 +47,7 @@ namespace LibraryManagment.Services
 
             connection.Execute(sql);
 
-            connection.Close();
+            CloseConnection();
         }
     }
 }

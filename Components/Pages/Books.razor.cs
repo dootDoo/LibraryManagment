@@ -18,7 +18,7 @@ namespace LibraryManagment.Components.Pages
 
 
         private BookAccessor bookAcessor = new BookAccessor();
-        private CategoryAcessor categoryAcessor = new CategoryAcessor();
+        private CategoryAccessor categoryAcessor = new CategoryAccessor();
 
         //Get list of DB items into a list
         protected override void OnInitialized()
