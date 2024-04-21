@@ -12,42 +12,72 @@ namespace LibraryManagment.Services
 
         public List<Employee> Get()
         {
-            OpenConnection();
+            try
+            {
+                OpenConnection();
 
-            var sql = "SELECT * FROM employees";
+                var sql = "SELECT * FROM employees";
 
-            var employees = connection.Query<Employee>(sql).AsList();
+                var employees = connection.Query<Employee>(sql).AsList();
 
-            CloseConnection();
-            return employees;
+                return employees;
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Failed to retrieve employees.", ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         public void Add(Employee employee)
         {
-            OpenConnection();
+            try
+            {
+                OpenConnection();
 
-            var sql = $@"
+                var sql = $@"
     INSERT INTO employees(EmployeeId, FirstName, LastName, Phone, Email)
     VALUES('{employee.EmployeeId}', '{employee.FirstName}', '{employee.LastName}', '{employee.Phone}', '{employee.Email}'
     )";
 
-            connection.Execute(sql);
+                connection.Execute(sql);
 
-            CloseConnection();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Failed to add employees.", ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         //Remove book in DB
         public void Remove(Employee employee)
         {
-            OpenConnection();
+            try
+            {
+                OpenConnection();
 
-            var sql = $@"
+                var sql = $@"
     DELETE FROM employees
     WHERE EmployeeId = {employee.EmployeeId}";
 
-            connection.Execute(sql);
+                connection.Execute(sql);
 
-            CloseConnection();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Failed to remove employees.", ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
     }
 }

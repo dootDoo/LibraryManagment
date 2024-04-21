@@ -1,5 +1,6 @@
-﻿using Dapper;
-using LibraryManagment.Models;
+﻿using LibraryManagment.Models;
+using Dapper;
+using MySqlConnector;
 
 namespace LibraryManagment.Services
 {
@@ -11,14 +12,24 @@ namespace LibraryManagment.Services
 
         public List<Category> Get()
         {
-            OpenConnection();
+            try
+            {
+                OpenConnection();
 
-            var sql = "SELECT * FROM categories";
+                var sql = "SELECT * FROM categories";
 
-            List<Category> categories = connection.Query<Category>(sql).AsList();
+                List<Category> categories = connection.Query<Category>(sql).AsList();
 
-            CloseConnection();
-            return categories;
+                return categories;
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Failed to retrieve categories.", ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
     }
 }

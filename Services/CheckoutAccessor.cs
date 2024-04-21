@@ -1,5 +1,5 @@
-﻿using Dapper;
-using LibraryManagment.Models;
+﻿using LibraryManagment.Models;
+using Dapper;
 using MySqlConnector;
 
 namespace LibraryManagment.Services
@@ -12,9 +12,11 @@ namespace LibraryManagment.Services
 
         public List<Checkout> Get()
         {
-            OpenConnection(); // Abstracted connection management
+            try
+            {
+                OpenConnection(); // Abstracted connection management
 
-            var sql = @"
+                var sql = @"
                 SELECT
                     c.CheckoutId,
                     c.ISBN,
@@ -28,38 +30,66 @@ namespace LibraryManagment.Services
                     INNER JOIN Books b ON c.ISBN = b.ISBN
                     INNER JOIN Members m ON c.MemberId = m.MemberId;";
 
-            var checkouts = connection.Query<Checkout>(sql).AsList();
+                var checkouts = connection.Query<Checkout>(sql).AsList();
 
-            CloseConnection();
-            return checkouts;
+                return checkouts;
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Failed to retrieve checkouts.", ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         public void Add(Checkout checkout)
         {
-            OpenConnection(); // Abstracted connection management
+            try
+            {
+                OpenConnection(); // Abstracted connection management
 
-            var sql = $@"
+                var sql = $@"
     INSERT INTO checkouts(CheckoutId, ISBN, MemberId, CheckOutDate, ReturnDate)
     VALUES('{checkout.CheckoutId}', '{checkout.ISBN}', {checkout.MemberId}, '{checkout.CheckOutDate.ToString("yyyy-MM-dd")}', '{checkout.ReturnDate.ToString("yyyy-MM-dd")}'
     )";
 
-            connection.Execute(sql);
+                connection.Execute(sql);
 
-            CloseConnection();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Failed to add checkouts.", ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         //Remove book in DB
         public void Remove(Checkout checkout)
         {
-            OpenConnection(); // Abstracted connection management
+            try
+            {
+                OpenConnection(); // Abstracted connection management
 
-            var sql = $@"
+                var sql = $@"
     DELETE FROM checkouts
     WHERE CheckoutId = {checkout.CheckoutId}";
 
-            connection.Execute(sql);
+                connection.Execute(sql);
 
-            CloseConnection();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Failed to remove checkouts.", ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
     }
 }

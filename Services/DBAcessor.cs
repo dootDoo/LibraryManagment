@@ -1,5 +1,4 @@
-﻿using Dapper;
-using MySqlConnector;
+﻿using MySqlConnector;
 
 namespace LibraryManagment.Services
 {
@@ -9,34 +8,55 @@ namespace LibraryManagment.Services
 
         public DBAcessor()
         {
-            // get environemnt variable
-            string dbHost = Environment.GetEnvironmentVariable("DB_HOST");
-            string dbUser = Environment.GetEnvironmentVariable("DB_USER");
-            string dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
-
-            var builder = new MySqlConnectionStringBuilder
+            try
             {
-                Server = dbHost,
-                UserID = dbUser,
-                Password = dbPassword,
-                Database = "library", // Use maria db to create a database called library
-            };
+                string dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+                string dbUser = Environment.GetEnvironmentVariable("DB_USER");
+                string dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD");
 
-            connection = new MySqlConnection(builder.ConnectionString);
+                var builder = new MySqlConnectionStringBuilder
+                {
+                    Server = dbHost,
+                    UserID = dbUser,
+                    Password = dbPassword,
+                    Database = "library",
+                };
+
+                connection = new MySqlConnection(builder.ConnectionString);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to initialize database connection.", ex);
+            }
         }
+
         protected void OpenConnection()
         {
-            if (connection.State == System.Data.ConnectionState.Closed)
+            try
             {
-                connection.Open();
+                if (connection.State == System.Data.ConnectionState.Closed)
+                {
+                    connection.Open();
+                }
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Failed to open database connection.", ex);
             }
         }
 
         protected void CloseConnection()
         {
-            if (connection.State == System.Data.ConnectionState.Open)
+            try
             {
-                connection.Close();
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Failed to close database connection.", ex);
             }
         }
     }

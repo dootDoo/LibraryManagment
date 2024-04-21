@@ -12,42 +12,72 @@ namespace LibraryManagment.Services
 
         public List<Member> Get()
         {
-            OpenConnection();
+            try
+            {
+                OpenConnection();
 
-            var sql = "SELECT * FROM members";
+                var sql = "SELECT * FROM members";
 
-            var members = connection.Query<Member>(sql).AsList();
+                var members = connection.Query<Member>(sql).AsList();
 
-            CloseConnection();
-            return members;
+                return members;
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Failed to retrieve members.", ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         public void Add(Member member)
         {
-            OpenConnection();
+            try
+            {
+                OpenConnection();
 
-            var sql = $@"
+                var sql = $@"
     INSERT INTO members(MemberId, FirstName, LastName, Phone, Email)
     VALUES('{member.MemberId}', '{member.FirstName}', '{member.LastName}', '{member.Phone}', '{member.Email}'
     )";
 
-            connection.Execute(sql);
+                connection.Execute(sql);
 
-            CloseConnection();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Failed to add members.", ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
 
         //Remove book in DB
         public void Remove(Member member)
         {
-            OpenConnection();
+            try
+            {
+                OpenConnection();
 
-            var sql = $@"
+                var sql = $@"
     DELETE FROM members
     WHERE MemberId = {member.MemberId}";
 
-            connection.Execute(sql);
+                connection.Execute(sql);
 
-            CloseConnection();
+            }
+            catch (MySqlException ex)
+            {
+                throw new Exception("Failed to remove members.", ex);
+            }
+            finally
+            {
+                CloseConnection();
+            }
         }
     }
 }
